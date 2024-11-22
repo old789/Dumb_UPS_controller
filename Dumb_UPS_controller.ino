@@ -31,7 +31,9 @@ TickTwo timer3( usual_report, 60000);
 
 byte external_power_state = HIGH;
 byte external_power_state_prev = HIGH;
-unsigned int last_change_state = 0;
+byte battery_state = HIGH;
+byte battery_state_prev = HIGH;
+// unsigned int last_change_state = 0;
 uint8_t wifi_tries = 0;
 bool first_report = true;
 int httpResponseCode = 0;
@@ -75,20 +77,43 @@ void loop() {
 
 void check_ups_status(){
 #if defined ( USE_SERIAL )
-  PGM_P msg_pwr_fail = PSTR("Ext.power failed");
-  PGM_P msg_pwr_restore = PSTR("Ext.power restored");
+  PGM_P msg_pwr_fail = PSTR("External power failed");
+  PGM_P msg_pwr_restore = PSTR("External power restored");
+  PGM_P msg_battery_low = PSTR("Low battery");
+  PGM_P msg_battery_ok = PSTR("Battery is Ok");
 #endif
 
-  external_power_state = digitalRead(PIN_EXT_POWER);   // read and logging external power state
-  if (external_power_state_prev == external_power_state) {
-    last_change_state++;
-  } else {
-    last_change_state = 0;
+  // read and logging external power state
+  external_power_state = digitalRead(PIN_EXT_POWER);   
+  if (external_power_state_prev != external_power_state) {
     external_power_state_prev = external_power_state;
+    if (external_power_state == LOW) {
+      send_alarm_ab_input( false );
 #ifdef USE_SERIAL
-    if (external_power_state == LOW) Serial.println(FPSTR(msg_pwr_fail));
-    else Serial.println(FPSTR(msg_pwr_restore));
+      Serial.println(FPSTR(msg_pwr_fail));
 #endif
+    } else {
+      send_alarm_ab_input( true );
+#ifdef USE_SERIAL
+      Serial.println(FPSTR(msg_pwr_restore));
+#endif
+    }
+  }
+
+  battery_state = digitalRead(PIN_LOW_BATT);   
+  if (battery_state_prev != battery_state) {
+    battery_state_prev = battery_state;
+    if (battery_state == LOW) {
+      send_alarm_ab_battery( false );
+#ifdef USE_SERIAL
+      Serial.println(FPSTR(msg_battery_low));
+#endif
+    } else {
+      send_alarm_ab_battery( true );
+#ifdef USE_SERIAL
+      Serial.println(FPSTR(msg_battery_ok));
+#endif
+    }
   }
 
 }

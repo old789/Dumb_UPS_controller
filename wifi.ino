@@ -16,9 +16,9 @@ void make_post_header(){
 void send_alarm_ab_input( bool wtf ){
   make_post_header();
   if ( wtf ) {
-    strncat(str_post, "&alarm=no input voltage", sizeof(str_post)-1);
+    strncat(str_post, "&alarm=power restored", sizeof(str_post)-1);
   } else {
-    strncat(str_post, "&alarm=power returned", sizeof(str_post)-1);
+    strncat(str_post, "&alarm=no input voltage", sizeof(str_post)-1);
   }
 
 #ifdef DBG_WIFI
@@ -27,20 +27,21 @@ void send_alarm_ab_input( bool wtf ){
   send_data();
 }
 
-void send_alarm_ab_shutdown( bool wtf ) {
+void send_alarm_ab_battery( bool wtf ) {
   make_post_header();
-  strncat(str_post, "&alarm=low battery", sizeof(str_post)-1);
-
+  if ( wtf ) {
+    strncat(str_post, "&alarm=battery is Ok", sizeof(str_post)-1);
+  } else {
+    strncat(str_post, "&alarm=low battery", sizeof(str_post)-1);
+  }
+  
 #ifdef DBG_WIFI
   Serial.print("Alarm: \""); Serial.print(str_post); Serial.println("\"");
 #endif
   send_data();
 }
 
-
 void usual_report(){
-  char str_tmp[128];
-
   make_post_header();
   strncat(str_post, "&msg=UPS alive", sizeof(str_post)-1);
 
