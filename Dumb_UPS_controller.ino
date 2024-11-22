@@ -16,7 +16,9 @@
 
 #define PIN_EXT_POWER   2 // GPIO2
 #define PIN_LOW_BATT    3 // GPIO3 (RX)
-
+#if not defined ( DEBUG_SERIAL )
+#define PIN_LED         1 // GPIO1 (TX);
+#endif
 
 void count_uptime();
 void usual_report();
@@ -30,8 +32,25 @@ TickTwo timer3( usual_report, 60000);
 byte external_power_state = HIGH;
 byte external_power_state_prev = HIGH;
 unsigned int last_change_state = 0;
+uint8_t wifi_tries = 0;
+bool first_report = true;
+int httpResponseCode = 0;
+
+//   Config begin
+char ups_name[33] = {0};
+char ssid[33] = {0};
+char passw[65] = {0};
+char host[65] = {0};
+uint16_t port = 443;
+char uri[128] = {0};
+uint8_t http_auth = 0;
+char http_user[33] = {0};
+char http_passw[33] = {0};
+//   Config end
 
 char str_uptime[17] = "0d0h0m0s";
+char str_post[1024];
+
 
 void setup() {
 #ifdef DEBUG_SERIAL
@@ -71,10 +90,6 @@ void check_ups_status(){
     else Serial.println(FPSTR(msg_pwr_restore));
 #endif
   }
-
-}
-
-void usual_report() {
 
 }
 
