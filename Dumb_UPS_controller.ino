@@ -59,6 +59,8 @@ void setup() {
   Serial.begin(115200,SERIAL_8N1,SERIAL_TX_ONLY);
   delay(50);
   Serial.println(".\nStart debugging serial");
+#else
+  pinMode(PIN_LED, OUTPUT);
 #endif
 
   pinMode(PIN_EXT_POWER, INPUT);
@@ -76,11 +78,13 @@ void loop() {
 }
 
 void check_ups_status(){
-#if defined ( USE_SERIAL )
+#if defined ( DEBUG_SERIAL )
   PGM_P msg_pwr_fail = PSTR("External power failed");
   PGM_P msg_pwr_restore = PSTR("External power restored");
   PGM_P msg_battery_low = PSTR("Low battery");
   PGM_P msg_battery_ok = PSTR("Battery is Ok");
+#else
+  digitalWrite(PIN_LED, digitalRead(PIN_LED) ^ 1);
 #endif
 
   // read and logging external power state
@@ -89,12 +93,12 @@ void check_ups_status(){
     external_power_state_prev = external_power_state;
     if (external_power_state == LOW) {
       send_alarm_ab_input( false );
-#ifdef USE_SERIAL
+#ifdef DEBUG_SERIAL
       Serial.println(FPSTR(msg_pwr_fail));
 #endif
     } else {
       send_alarm_ab_input( true );
-#ifdef USE_SERIAL
+#ifdef DEBUG_SERIAL
       Serial.println(FPSTR(msg_pwr_restore));
 #endif
     }
@@ -105,12 +109,12 @@ void check_ups_status(){
     battery_state_prev = battery_state;
     if (battery_state == LOW) {
       send_alarm_ab_battery( false );
-#ifdef USE_SERIAL
+#ifdef DEBUG_SERIAL
       Serial.println(FPSTR(msg_battery_low));
 #endif
     } else {
       send_alarm_ab_battery( true );
-#ifdef USE_SERIAL
+#ifdef DEBUG_SERIAL
       Serial.println(FPSTR(msg_battery_ok));
 #endif
     }
