@@ -38,7 +38,7 @@ uint8_t wifi_tries = 0;
 bool first_report = true;
 int httpResponseCode = 0;
 
-//   Config begin
+/*   Config begin
 char ups_name[33] = {0};
 char ssid[33] = {0};
 char passw[65] = {0};
@@ -48,7 +48,9 @@ char uri[128] = {0};
 uint8_t http_auth = 0;
 char http_user[33] = {0};
 char http_passw[33] = {0};
-//   Config end
+//   Config end */
+
+#include "config.h"
 
 char str_uptime[17] = "0d0h0m0s";
 char str_post[1024];
