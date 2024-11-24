@@ -15,7 +15,7 @@ char host[65] = {0};
 // remote port 
 uint16_t port = 443;
 
-// URI of the script which writes to log
+// URI of the script that writes to the log
 char uri[128] = {0};
 
 // Enable HTTP auth ( 1 - enable )
