@@ -3,6 +3,9 @@
 // Name of system for logging
 char ups_name[33] = {0};
 
+// Model of device
+char ups_model[33] = {0};
+
 // WiFi SSID
 char ssid[33] = {0};
 

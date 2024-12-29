@@ -5,6 +5,12 @@
 #define DEBUG_SERIAL
 #endif
 
+// #define UPS
+
+#if not defined UPS
+#define POWER_SENSOR
+#endif
+
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
 #include <WiFiClientSecureBearSSL.h>
@@ -15,7 +21,9 @@
 
 
 #define PIN_EXT_POWER   3 // GPIO3 (RX)
+#if defined UPS
 #define PIN_LOW_BATT    2 // GPIO2
+#endif
 #if not defined ( DEBUG_SERIAL )
 #define PIN_LED         1 // GPIO1 (TX);
 #endif
@@ -31,10 +39,10 @@ TickTwo timer3( usual_report, 60000);
 
 byte external_power_state = HIGH;
 byte external_power_state_prev = HIGH;
+#if defined ( UPS )
 byte battery_state = HIGH;
 byte battery_state_prev = HIGH;
-// unsigned int last_change_state = 0;
-uint8_t wifi_tries = 0;
+#endif
 bool first_report = true;
 int httpResponseCode = 0;
 
@@ -54,7 +62,9 @@ void setup() {
 #endif
 
   pinMode(PIN_EXT_POWER, INPUT);
+#if defined ( UPS )
   pinMode(PIN_LOW_BATT,  INPUT);
+#endif
 
   wifi_init();
 
@@ -96,6 +106,7 @@ void check_ups_status(){
     }
   }
 
+#if defined ( UPS )
   battery_state = digitalRead(PIN_LOW_BATT);   
   if (battery_state_prev != battery_state) {
     battery_state_prev = battery_state;
@@ -111,6 +122,7 @@ void check_ups_status(){
 #endif
     }
   }
+#endif
 
 }
 
