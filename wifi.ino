@@ -58,7 +58,7 @@ void usual_report(){
     strncpy(str_batt, "batteryLow", sizeof(str_batt)-1);
   }
   
-  sprintf(str_tmp, "&data1=%s,%s,%s,%d", str_power, str_batt, WiFi.localIP(), WiFi.RSSI() );
+  sprintf(str_tmp, "&data1=%s,%s,%s,%d", str_power, str_batt, WiFi.localIP().toString().c_str(), WiFi.RSSI() );
   
   make_post_header();
   strncat(str_post, str_tmp, sizeof(str_post)-1);

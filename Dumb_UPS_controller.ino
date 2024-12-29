@@ -14,8 +14,8 @@
 #include "uptime.h"     // https://github.com/YiannisBourkelis/Uptime-Library
 
 
-#define PIN_EXT_POWER   2 // GPIO2
-#define PIN_LOW_BATT    3 // GPIO3 (RX)
+#define PIN_EXT_POWER   3 // GPIO3 (RX)
+#define PIN_LOW_BATT    2 // GPIO2
 #if not defined ( DEBUG_SERIAL )
 #define PIN_LED         1 // GPIO1 (TX);
 #endif
@@ -55,6 +55,8 @@ void setup() {
 
   pinMode(PIN_EXT_POWER, INPUT);
   pinMode(PIN_LOW_BATT,  INPUT);
+
+  wifi_init();
 
   timer1.start();
   timer2.start();
